@@ -1,6 +1,11 @@
+const ContactsRepository = require("../repositories/ContactsRepository");
+
 class ContactController {
-  index() {
+  async index(request, response) {
     // listar todos os registros
+    const contacts = await ContactsRepository.findAll();
+
+    response.json(contacts);
   }
 
   show() {
@@ -20,5 +25,5 @@ class ContactController {
   }
 }
 
-// singleton => retorna apenas uma instância da controller
+// singleton => todo mundo que usar esse modulo vai usar a mesma intância
 module.exports = new ContactController();
