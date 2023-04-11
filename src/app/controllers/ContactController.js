@@ -8,20 +8,63 @@ class ContactController {
     response.json(contacts);
   }
 
-  show() {
+  async show(request, response) {
     // obterr um registro
+    const { id } = request.params;
+
+    const contact = await ContactsRepository.findById(id);
+
+    if (!contact) {
+      return response.status(404).json({ error: "Contact not found" });
+    }
+
+    response.json(contact);
   }
 
-  store() {
+  async store(request, response) {
     // criar um novo registro
+    const { name, email, phone, category_id } = request.body;
+
+    if (!name) {
+      return response.status(400).json({ error: "Name is required" });
+    }
+
+    const contactExists = await ContactsRepository.findByEmail(email);
+
+    if (contactExists) {
+      return response
+        .status(400)
+        .json({ error: "This e-mail is already been taken" });
+    }
+
+    const contact = await ContactsRepository.create({
+      name,
+      email,
+      phone,
+      category_id,
+    });
+
+    response.send(contact);
   }
 
   update() {
     // editar um registro
   }
 
-  delelte() {
+  async delete(request, response) {
     // deletar um registro
+    const { id } = request.params;
+
+    const contact = await ContactsRepository.findById(id);
+
+    if (!contact) {
+      return response.status(404).json({ error: "Contact not found" });
+    }
+
+    await ContactsRepository.delete(id);
+
+    // sendStatus retorna apenas o status
+    response.sendStatus(204);
   }
 }
 
