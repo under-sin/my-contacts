@@ -12,9 +12,9 @@ const client = new Client({
 client.connect();
 
 // client.query -> retorna uma promisse
-exports.query = async (query) => {
+exports.query = async (query, values) => {
   // dentro  da query os unicos dados que precisamos são as rows
-  const { rows } = await client.query(query);
+  const { rows } = await client.query(query, values);
   return rows;
 };
 
